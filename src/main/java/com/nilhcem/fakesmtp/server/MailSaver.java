@@ -6,6 +6,7 @@ import com.nilhcem.fakesmtp.core.I18n;
 import com.nilhcem.fakesmtp.model.EmailModel;
 import com.nilhcem.fakesmtp.model.UIModel;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -130,22 +131,15 @@ public final class MailSaver extends Observable {
 	 * @return the converted string object, containing data from the InputStream passed in parameters.
 	 */
 	private String convertStreamToString(InputStream is) {
-		final long lineNbToStartCopy = 4; // Do not copy the first 4 lines (received part)
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName(I18n.UTF8)));
-		StringBuilder sb = new StringBuilder();
-
-		String line;
-		long lineNb = 0;
-		try {
-			while ((line = reader.readLine()) != null) {
-				if (++lineNb > lineNbToStartCopy) {
-					sb.append(line).append(LINE_SEPARATOR);
-				}
-			}
-		} catch (IOException e) {
-			LOGGER.error("", e);
-		}
-		return sb.toString();
+        try {
+            return IOUtils.toString(is, Charset.forName(I18n.UTF8));
+        } catch (IOException e) {
+            LOGGER.error("", e);
+            return null;
+        }
+        finally {
+            IOUtils.closeQuietly(is);
+        }
 	}
 
 	/**

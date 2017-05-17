@@ -59,6 +59,10 @@ public enum ArgsHandler {
 	private static final String OPT_EMLVIEWER_LONG = "eml-viewer";
 	private static final String OPT_EMLVIEWER_DESC = "Executable of program used for viewing emails";
 
+	private static final String OPT_DELIVER_FIRST_SHORT = "dfm";
+	private static final String OPT_DELIVER_FIRST_LONG = "deliver-first";
+	private static final String OPT_DELIVER_FIRST_DESC = "Deliver first mode";
+
 	private final Options options;
 
 	private String port;
@@ -68,6 +72,7 @@ public enum ArgsHandler {
 	private boolean backgroundStart;
 	private boolean startServerAtLaunch;
 	private boolean memoryModeEnabled;
+	private boolean deliverFirstMode;
 
 	/**
 	 * Handles command line arguments.
@@ -82,6 +87,7 @@ public enum ArgsHandler {
 		options.addOption(OPT_RELAYDOMAINS_SHORT, OPT_RELAYDOMAINS_LONG, true, OPT_RELAYDOMAINS_DESC);
 		options.addOption(OPT_MEMORYMODE_SHORT, OPT_MEMORYMODE_LONG, false, OPT_MEMORYMODE_DESC);
 		options.addOption(OPT_EMLVIEWER_SHORT, OPT_EMLVIEWER_LONG, true, OPT_EMLVIEWER_DESC);
+		options.addOption(OPT_DELIVER_FIRST_SHORT, OPT_DELIVER_FIRST_LONG, false, OPT_DELIVER_FIRST_DESC);
 	}
 
 	/**
@@ -105,6 +111,7 @@ public enum ArgsHandler {
 		backgroundStart = cmd.hasOption(OPT_BACKGROUNDSTART_SHORT);
 		memoryModeEnabled = cmd.hasOption(OPT_MEMORYMODE_SHORT);
 		emlViewer = cmd.getOptionValue(OPT_EMLVIEWER_SHORT);
+		deliverFirstMode = cmd.hasOption(OPT_DELIVER_FIRST_SHORT);
 
 		// Change SMTP server log level to info if memory mode was enabled to improve performance
 		if (memoryModeEnabled) {
@@ -183,6 +190,10 @@ public enum ArgsHandler {
 	 */
 	public String getEmlViewer() {
 		return emlViewer;
+	}
+
+	public boolean isDeliverFirstMode() {
+		return deliverFirstMode;
 	}
 
 	/**

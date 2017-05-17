@@ -2,8 +2,10 @@ package com.nilhcem.fakesmtp.server;
 
 import java.net.InetAddress;
 
+import com.nilhcem.fakesmtp.core.ArgsHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.subethamail.smtp.helper.DeliverFirstMessageListenerAdapter;
 import org.subethamail.smtp.helper.SimpleMessageListenerAdapter;
 import org.subethamail.smtp.server.SMTPServer;
 import com.nilhcem.fakesmtp.core.exception.BindPortException;
@@ -37,6 +39,9 @@ public enum SMTPServerHandler {
 	 */
 	public void startServer(int port, InetAddress bindAddress) throws BindPortException, OutOfRangePortException {
 		LOGGER.debug("Starting server on port {}", port);
+		if (ArgsHandler.INSTANCE.isDeliverFirstMode()) {
+			smtpServer.setMessageHandlerFactory(new DeliverFirstMessageListenerAdapter(myListener));
+		}
 		try {
 			smtpServer.setBindAddress(bindAddress);
 			smtpServer.setPort(port);
